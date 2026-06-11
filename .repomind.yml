@@ -1,0 +1,33 @@
+# .repomind.yml — RepoMind configuration for this repository
+# Docs: https://github.com/repomind/repomind/blob/main/projectdocs/ONBOARDING.md
+#
+# RepoMind is an autonomous CI auto-fix agent. This file controls how it
+# behaves for THIS repo.
+
+# ─── Mode ───────────────────────────────────────────────────────────────
+# auto_fix : RepoMind opens PRs with proposed fixes (still requires human merge)
+# dry_run  : RepoMind only posts comments with proposed fixes (no PRs) ← SAFE
+# disabled : RepoMind ignores this repo entirely
+mode: dry_run
+
+# ─── Human-in-the-Loop ──────────────────────────────────────────────────
+# When true, RepoMind will NEVER auto-merge a PR. A human review is required.
+# Recommended: keep this true.
+hitl_required: true
+
+# ─── Policy ─────────────────────────────────────────────────────────────
+# What kinds of failures should RepoMind try to fix?
+policy:
+  allowed_failure_types:
+    - dependency_error    # Missing pip packages, version conflicts
+    - import_error        # Wrong import paths
+    - syntax_error        # Indentation, missing colons, etc.
+    # - test_failure      # Uncomment to allow test fixes (riskier)
+    # - lint_error        # Uncomment to allow lint fixes
+  max_risk_level: low     # low | medium | high
+  min_confidence: 0.7     # Reject fixes the agent isn't confident about
+
+# ─── Notifications (optional) ───────────────────────────────────────────
+notifications:
+  slack_webhook: ""       # e.g. "https://hooks.slack.com/services/..."
+  email: ""               # e.g. "team@example.com"
