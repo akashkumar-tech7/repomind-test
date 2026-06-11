@@ -1,33 +1,37 @@
-# .repomind.yml — RepoMind configuration for this repository
-# Docs: https://github.com/repomind/repomind/blob/main/projectdocs/ONBOARDING.md
-#
-# RepoMind is an autonomous CI auto-fix agent. This file controls how it
-# behaves for THIS repo.
+# .repomind.yml — RepoMind configuration for this repo
+# Docs: https://github.com/your-org/repomind
 
-# ─── Mode ───────────────────────────────────────────────────────────────
-# auto_fix : RepoMind opens PRs with proposed fixes (still requires human merge)
-# dry_run  : RepoMind only posts comments with proposed fixes (no PRs) ← SAFE
-# disabled : RepoMind ignores this repo entirely
-mode: dry_run
+# MODE: What action should RepoMind take?
+#   auto_fix  → opens a PR with the fix
+#   dry_run   → comments on the failed run with the suggestion (no PR)
+#   disabled  → ignore this repo
+mode: auto_fix
 
-# ─── Human-in-the-Loop ──────────────────────────────────────────────────
-# When true, RepoMind will NEVER auto-merge a PR. A human review is required.
-# Recommended: keep this true.
+# HITL (Human-In-The-Loop):
+#   true  → PR opens as DRAFT, you review and merge manually
+#   false → PR auto-merges after CI passes (full automation, demo only!)
 hitl_required: true
 
-# ─── Policy ─────────────────────────────────────────────────────────────
-# What kinds of failures should RepoMind try to fix?
 policy:
+  # Which failure types is RepoMind allowed to auto-fix?
   allowed_failure_types:
-    - dependency_error    # Missing pip packages, version conflicts
-    - import_error        # Wrong import paths
-    - syntax_error        # Indentation, missing colons, etc.
-    # - test_failure      # Uncomment to allow test fixes (riskier)
-    # - lint_error        # Uncomment to allow lint fixes
-  max_risk_level: low     # low | medium | high
-  min_confidence: 0.7     # Reject fixes the agent isn't confident about
+    - dependency_error
+    - import_error
+    - syntax_error
+    - test_failure          # ← ADDED for demo
+    - lint_error
+    - type_error
 
-# ─── Notifications (optional) ───────────────────────────────────────────
+  # Maximum risk level RepoMind can act on
+  #   low    → only safe, mechanical fixes
+  #   medium → moderate refactors allowed
+  #   high   → big changes allowed (use carefully)
+  max_risk_level: medium
+
+  # Minimum LLM confidence required before acting (0.0 - 1.0)
+  min_confidence: 0.7
+
+# Optional notifications
 notifications:
-  slack_webhook: ""       # e.g. "https://hooks.slack.com/services/..."
-  email: ""               # e.g. "team@example.com"
+  slack_webhook: ""
+  email: ""
